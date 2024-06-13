@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.containtdiv {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  border: 1px solid black;
+  width: 30rem;
+  border-radius: 5px;
+  padding: 15px;
+}
+.logo {
+  margin-left: 50px;
+}
+.navbardiv {
+  display: flex;
+  justify-content: end;
+  margin-right: 50px;
+}
+
+.profilediv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 5rem;
+}
+.labeless {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.inp {
+  margin-top: 6px;
+}
+
+.upd {
+  margin-top: 4px;
+}
+
+.inpu {
+  border: 1px solid;
+  border-radius: 5px;
+  height: 40px;
+}
