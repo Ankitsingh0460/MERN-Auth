@@ -2,9 +2,27 @@ import React from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { IoCreate } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutMutation } from "../slices/usersApi";
+import { logout } from "../slices/authSlice";
+import { CiLogout } from "react-icons/ci";
 
 function Header() {
+  const { userInfo } = useSelector((state) => state.auth);
+  const [logoutApiCall] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light ">
@@ -29,22 +47,37 @@ function Header() {
             id="navbarNavAltMarkup"
           >
             <div className="navbar-nav m-2 ">
-              <Link
-                to="/signin"
-                className="nav-link active "
-                aria-current="page"
-              >
-                <FaSignInAlt />
-                LogIn
-              </Link>
+              {userInfo ? (
+                <button
+                  className="nav-link active "
+                  aria-current="page"
+                  onClick={logoutHandler}
+                >
+                  <CiLogout />
+                  LogOut
+                </button>
+              ) : (
+                <Link
+                  to="/signin"
+                  className="nav-link active "
+                  aria-current="page"
+                >
+                  <FaSignInAlt />
+                  LogIn
+                </Link>
+              )}
 
               <Link to="/signup" className="nav-link">
                 <IoCreate />
                 SignUp
               </Link>
-              <Link to="/profile" className="nav-link">
-                <CgProfile /> Profile
-              </Link>
+              {userInfo ? (
+                <Link to="/profile" className="nav-link">
+                  <CgProfile /> {userInfo.name}
+                </Link>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

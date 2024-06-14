@@ -15,9 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 mongoose
   .connect(URL)
-  .then(() => console.log("mongodb is connected"))
+  .then(() => console.log("Mongodb is connected"))
   .catch((err) => console.log("error", err));
-app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 app.listen(Port, () => {
   console.log(`Server started ${Port}`);
 });

@@ -1,48 +1,95 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { setCredentials } from "../slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useRegisterMutation } from "../slices/usersApi";
 
 function SignUp() {
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [ragister, { isLoading }] = useRegisterMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await ragister({ name, email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate("/");
+    } catch (error) {
+      if (error.response) {
+        alert("error" + error.response.data.message);
+      }
+    }
+  };
+
   return (
     <>
-      <form>
-        <div class="d-flex justify-content-center mt-4">
+      <form onSubmit={onHandleSubmit}>
+        <div className="d-flex justify-content-center mt-4">
           <h1>SignUp</h1>
         </div>
         <div className="container flex justify-center mt-4">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">
+          <div className="mb-3">
+            <label htmlFor="exampleInputEmail1" className="form-label">
               Full Name
             </label>
-            <input type="name" class="form-control" id="name" />
+            <input
+              type="name"
+              className="form-control"
+              id="name"
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">
+          <div className="mb-3">
+            <label htmlFor="exampleInputEmail1" className="form-label">
               Email address
             </label>
             <input
               type="email"
-              class="form-control"
+              className="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <div id="emailHelp" class="form-text">
+            <div id="emailHelp" className="form-text">
               We'll never share your email with anyone else.
             </div>
           </div>
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
               Password
             </label>
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               id="exampleInputPassword1"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
-          <button type="submit" class="btn btn-primary ">
-            Submit
-          </button>
+          {isLoading && (
+            <div className="d-flex justify-content-center mb-4">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          )}
+          <div className="d-flex justify-content-center">
+            <button type="submit" className="btn btn-primary ">
+              Submit
+            </button>
+          </div>
           <h6 className="mt-4">
             Have an Account?<Link to="/signin">click here</Link>
           </h6>
