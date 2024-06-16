@@ -22,7 +22,6 @@ const UpdateProfile = () => {
 
   const onHandleSubmits = async (e) => {
     e.preventDefault();
-
     try {
       const res = await updateProfile({
         _id: userInfo._id,
@@ -30,13 +29,10 @@ const UpdateProfile = () => {
         email,
         password,
       }).unwrap();
-      console.log(res);
+
       dispatch(setCredentials({ ...res }));
-      alert("Profile updated successfully");
     } catch (err) {
-      if (err.response) {
-        alert("error" + err.response.data.message);
-      }
+      alert(err.data);
     }
   };
   return (

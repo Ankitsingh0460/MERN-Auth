@@ -27,10 +27,8 @@ function SignIn() {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate("/");
-    } catch (error) {
-      if (error.response) {
-        alert("error" + error.response.data.message);
-      }
+    } catch (err) {
+      alert(err.data);
     }
   };
   return (
